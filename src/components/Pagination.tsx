@@ -47,42 +47,44 @@ export default function Pagination({ limit, offset, totalCount, onPageChange }: 
 
 
   return (
-    <div className="flex justify-center mt-6">
-      <div className="flex items-center gap-2">
-        <button
-          className="btn btn-sm px-3"
-          disabled={currentPage === 1}
-          onClick={() => goToPage(currentPage - 1)}
-        >
-          «
-        </button>
+  <div className="flex justify-center mt-10 px-4">
+    <div className="flex flex-wrap items-center gap-2">
+      {/* Previous Button */}
+      <button
+        className="btn btn-sm px-4 rounded-md shadow-sm hover:shadow transition-all disabled:opacity-50"
+        disabled={currentPage === 1}
+        onClick={() => goToPage(currentPage - 1)}
+      >
+        «
+      </button>
 
-        {generatePages().map((page, i) =>
-          typeof page === "number" ? (
-            <button
-              key={i}
-              className={`btn btn-sm px-4 font-semibold ${
-                page === currentPage
-                  ? "btn-primary border text-green"
-                  : "bg-base-100 hover:bg-base-200"
-              }`}
-              onClick={() => goToPage(page)}
-            >
-              {page}
-            </button>
-          ) : (
-            <span key={i} className="px-2 text-gray-400 select-none">...</span>
-          )
-        )}
+      {/* Page Buttons */}
+      {generatePages().map((page, i) =>
+        typeof page === "number" ? (
+          <button
+            key={i}
+            className={`btn btn-sm px-4 rounded-md font-semibold shadow-sm transition-all ${
+              page === currentPage
+                ? "btn-primary border border-primary"
+                : "bg-base-100 text-gray-700 hover:bg-base-200"
+            }`}
+            onClick={() => goToPage(page)}
+          >
+            {page}
+          </button>
+        ) : (
+          <span key={i} className="px-3 text-gray-400 select-none">...</span>
+        )
+      )}
 
-        <button
-          className="btn btn-sm px-3"
-          disabled={currentPage === totalPages}
-          onClick={() => goToPage(currentPage + 1)}
-        >
-          »
-        </button>
-      </div>
+      <button
+        className="btn btn-sm px-4 rounded-md shadow-sm hover:shadow transition-all disabled:opacity-50"
+        disabled={currentPage === totalPages}
+        onClick={() => goToPage(currentPage + 1)}
+      >
+        »
+      </button>
     </div>
-  );
+  </div>
+);
 }
