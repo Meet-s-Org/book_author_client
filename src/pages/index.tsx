@@ -1,27 +1,14 @@
-// import Link from "next/link";
-import AuthorPage from "./authors";
-import BookPage from "./books";
+import LibraryTabView from "@/components/LibraryTabView";
 
-export default function Home() {
+export default function LibraryPage() {
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold">
-        Welcome to the Book App
-      </h1>
+    <main className="min-h-screen p-8 bg-base-200">
+      <h1 className="text-3xl font-bold text-primary">📚 Library Management</h1>
       <hr/>
-      <div> <AuthorPage/> </div>
-      <hr/>
-      <div> <BookPage/> </div>
-      {/* <nav>
-        <ul>
-          <li>
-            <Link href="/authors">Go to Authors</Link>
-          </li>
-          <li>
-            <Link href="/books">Go to Books</Link>
-          </li>
-        </ul>
-      </nav> */}
-    </div>
+      <div className="max-w-6xl mx-auto">
+        <LibraryTabView />
+      </div>
+    </main>
   );
 }
