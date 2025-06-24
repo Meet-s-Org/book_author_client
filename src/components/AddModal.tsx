@@ -85,7 +85,7 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
 
             return (
               <div key={key}>
-                <label className="label">
+                <label className="label w-full">
                   <span className="label-text capitalize font-medium">
                     {key.replace(/_/g, " ")}
                   </span>
@@ -97,7 +97,7 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
                     value={formData.author || ""}
                     onChange={handleChange}
                     disabled={loadingAuthors}
-                    className="select select-bordered w-full"
+                    className="select select-bordered"
                   >
                     <option disabled value="">
                       {loadingAuthors ? "Loading authors..." : "Select author"}
@@ -114,7 +114,7 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
                     name={key}
                     value={formData[key] || ""}
                     onChange={handleChange}
-                    className="input input-bordered w-full"
+                    className="input input-bordered"
                     placeholder={`Enter ${key.replace(/_/g, " ")}`}
                   />
                 )}

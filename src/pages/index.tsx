@@ -6,11 +6,11 @@ export default function LibraryPage() {
     <main className="min-h-screen p-8 bg-base-200">
       {/* <h1 className="text-3xl font-bold text-primary">📚 Library Management</h1> */}
 
-      <div className="bg-gradient-to-br from-base-100 to-base-200 shadow-2xl rounded-2xl border border-base-300 p-8 sm:p-10 max-w-full transition-all duration-300">
+      <div className="bg-primary from-base-100 to-base-200 shadow-2xl rounded-2xl border border-base-300 p-8 sm:p-10 max-w-full transition-all duration-300">
 
         {/* Brand Header */}
         <div className="text-center mb-8 px-4">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-primary-content tracking-tight">
             📚 BookByte
           </h1>
           <p className="text-gray-600 text-sm sm:text-base mt-1">
@@ -18,8 +18,7 @@ export default function LibraryPage() {
           </p>
         </div>
 
-        <hr/>
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-4xl mx:w-auto">
           <LibraryTabView />
         </div>
       </div>

@@ -9,6 +9,7 @@ import EditModal from "./EditModal";
 import DeleteConfirm from "./DeleteConfirm";
 import AddModal from "./AddModal";
 import LibraryCard from "./LibraryCard";
+import { MdMargin } from "react-icons/md";
 
 
 export default function LibraryTabView() {
@@ -71,7 +72,7 @@ export default function LibraryTabView() {
   return (
    <div className="bg-gradient-to-br from-base-100 to-base-200 shadow-2xl rounded-2xl border border-base-300 p-8 sm:p-10 max-w-full transition-all duration-300">
       
-      <div className="tabs tabs-boxed justify-center mb-6">
+      <div className="tabs tabs-boxed justify-center mb-10">
         {["authors", "books"].map((tab) => (
           <a
             key={tab}
@@ -83,45 +84,46 @@ export default function LibraryTabView() {
         ))}
       </div>
 
-      <div className="grid grid-cols-3 md:grid-cols-[auto_1fr_auto] items-center gap-4 mb-6 px-6">
-      <h2 className="text-lg md:text-xl font-semibold text-primary whitespace-nowrap">
-        {activeTab === "authors" ? "Author List" : "Book List"}
-      </h2>
+      <div className="grid grid-cols-3 md:grid-cols-[auto_1fr_auto] items-center gap-4 mb-10 px-6">
+        <h2 className="text-lg md:text-xl font-semibold text-primary whitespace-nowrap">
+          {activeTab === "authors" ? "Author List" : "Book List"}
+        </h2>
 
-      <div className="w-full">
-        <div className="join w-full max-w-xl ml-auto">
-          <input
-            type="text"
-            placeholder={`Search by ${activeTab === "authors" ? "Author Name" : "Book Title"}`}
-            className="input input-sm input-bordered join-item w-full"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
-          <button
-            className="btn btn-sm btn-primary join-item"
-            onClick={() => {
-              setOffset(0);
-              setSearchApplied(searchText);
-            }}
-          >
-            Search
-          </button>
-          <button
-            className="btn btn-sm join-item"
-            onClick={() => {
-              setSearchText("");
-              setSearchApplied("");
-              setOffset(0);
-            }}
-          >
-            Clear
-          </button>
+        <div className="w-full">
+          <div className="flex gap-2 items-center w-full max-w-xl mx-auto">
+            <input
+              type="text"
+              placeholder={`Search by ${activeTab === "authors" ? "Author Name" : "Book Title"}`}
+              className="input input-sm input-bordered flex-grow"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+
+            <button
+              className="btn btn-sm btn-primary btn-outline"
+              onClick={() => {
+                setOffset(0);
+                setSearchApplied(searchText);
+              }}
+            >
+              Search
+            </button>
+            <button
+              className="btn btn-sm btn-outline"
+              onClick={() => {
+                setSearchText("");  
+                setSearchApplied("");
+                setOffset(0);
+              }}
+            >
+              Clear
+            </button>
+          </div>
         </div>
-      </div>
 
       <div className="justify-self-end">
         <button
-          className="btn btn-sm btn-success gap-2 shadow-md whitespace-nowrap"
+          className="btn btn-sm btn-success gap-2 shadow-md whitespace-nowrap btn-outline"
           onClick={() => setShowAddModal(true)}
         >
           <FaPlus />
@@ -133,6 +135,24 @@ export default function LibraryTabView() {
       <div className="grid grid-cols-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-6 py-10">
         {(loadingAuthors || loadingBooks) && (
           <div className="col-span-full text-center py-10 text-lg">Loading...</div>
+        )}
+
+        {!loadingAuthors && !loadingBooks && currentData.length === 0 && (
+          <div className="col-span-full text-center py-10 text-gray-500">
+            <div className="text-3xl font-semibold mb-2">
+              No {activeTab === "authors" ? "authors" : "books"} found
+            </div>
+            <p className="text-sm mb-4">
+              You haven’t added any {activeTab === "authors" ? "authors" : "books"} yet.
+            </p>
+            <button
+              className="btn btn-sm btn-success gap-2 shadow-md whitespace-nowrap btn-outline"
+              onClick={() => setShowAddModal(true)}
+            >
+              <FaPlus className="mr-2" />
+              Add {activeTab === "authors" ? "Author" : "Book"}
+            </button>
+          </div>
         )}
 
         {currentData.map((item: any) => (
