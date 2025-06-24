@@ -12,31 +12,31 @@ type Props = {
 };
 
 export default function AddModal({ type, open, onClose, onRefresh }: Props) {
-    const [formData, setFormData] = useState<any>({});
-    
-    const {
-        data: authorsData,
-        refetch: refetchAuthors,
-        loading: loadingAuthors,
-    } = useQuery(GET_AUTHORS, {
-        skip: type !== "book" || !open,
-    });
-    
-    useEffect(() => {
-        if (open && type === "book") {
-            refetchAuthors(); // force fetch when modal opens
-        }
-    }, [open, type, refetchAuthors]);
+  const [formData, setFormData] = useState<any>({});
+
+  const {
+    data: authorsData,
+    refetch: refetchAuthors,
+    loading: loadingAuthors,
+  } = useQuery(GET_AUTHORS, {
+    skip: type !== "book" || !open,
+  });
+
+  useEffect(() => {
+    if (open && type === "book") {
+      refetchAuthors(); // force fetch when modal opens
+    }
+  }, [open, type, refetchAuthors]);
 
 
-    const [createAuthor] = useMutation(ADD_AUTHOR);
-    const [createBook] = useMutation(ADD_BOOK);
+  const [createAuthor] = useMutation(ADD_AUTHOR);
+  const [createBook] = useMutation(ADD_BOOK);
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-    ) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleCreate = async () => {
     try {
@@ -90,30 +90,30 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
                   {key.replace(/_/g, " ")}
                 </label>
                 {key === "author" ? (
-                    <select
-                        name="author"
-                        value={formData.author || ""}
-                        onChange={handleChange}
-                        disabled={loadingAuthors}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                    >
-                        <option value="" disabled>
-                            {loadingAuthors ? "Loading authors..." : "Select author"}
-                        </option>
-                        {authorsData?.getAuthors?.data?.map((author: any) => (
-                            <option key={author.id} value={author.name}>
-                                {author.name}
-                            </option>
-                        ))}
-                    </select>
-                    ) : (
-                    <input
-                        type={isDateField ? "date" : "text"}
-                        name={key}
-                        value={formData[key] || ""}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
+                  <select
+                    name="author"
+                    value={formData.author || ""}
+                    onChange={handleChange}
+                    disabled={loadingAuthors}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="" disabled>
+                      {loadingAuthors ? "Loading authors..." : "Select author"}
+                    </option>
+                    {authorsData?.getAuthors?.data?.map((author: any) => (
+                      <option key={author.id} value={author.name}>
+                        {author.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type={isDateField ? "date" : "text"}
+                    name={key}
+                    value={formData[key] || ""}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
                 )}
               </div>
             );

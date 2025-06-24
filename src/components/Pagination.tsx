@@ -14,7 +14,6 @@ export default function Pagination({ limit, offset, totalCount, onPageChange }: 
     onPageChange(newOffset);
   };
 
-  // Generate dynamic pages with ellipsis
   const generatePages = (): (number | string)[] => {
         const pages: (number | string)[] = [];
 
@@ -23,7 +22,7 @@ export default function Pagination({ limit, offset, totalCount, onPageChange }: 
             pages.push(i);
             }
         } else {
-            pages.push(1); // always show first page
+            pages.push(1);
 
             if (currentPage > 4) {
             pages.push("...");
@@ -40,7 +39,7 @@ export default function Pagination({ limit, offset, totalCount, onPageChange }: 
             pages.push("...");
             }
 
-            pages.push(totalPages); // always show last page
+            pages.push(totalPages);
         }
 
         return pages;

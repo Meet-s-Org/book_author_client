@@ -14,13 +14,15 @@ export default function LibraryTabView() {
   const [limit, setLimit] = useState(5);
   const [offset, setOffset] = useState(0);
   const [refreshCounter, setRefreshCounter] = useState(0);
+  const [searchText, setSearchText] = useState("");
+  const [searchApplied, setSearchApplied] = useState("");
 
   useEffect(() => {
-    setOffset(0); // Reset offset on tab change
+    setOffset(0);
   }, [activeTab]);
 
   const triggerRefresh = () => {
-    setOffset(0); // Optional: reset to first page
+    setOffset(0);
     setRefreshCounter((prev) => prev + 1);
   };
 
@@ -29,7 +31,7 @@ export default function LibraryTabView() {
     loading: loadingAuthors,
     refetch: refetchAuthors,
   } = useQuery(GET_AUTHORS, {
-    variables: { limit, offset },
+    variables: { limit, offset, searchByName: searchApplied },
     skip: activeTab !== "authors",
   });
 
@@ -38,7 +40,7 @@ export default function LibraryTabView() {
     loading: loadingBooks,
     refetch: refetchBooks,
   } = useQuery(GET_BOOKS, {
-    variables: { limit, offset },
+    variables: { limit, offset, searchByTitle: searchApplied },
     skip: activeTab !== "books",
   });
 
@@ -86,17 +88,45 @@ export default function LibraryTabView() {
         })}
       </div>
 
-      {/* Header Row */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-primary">
           {activeTab === "authors" ? "Author List" : "Book List"}
         </h2>
+        <div className="flex justify-center">
+          <div className="flex items-center rounded-lg shadow-sm border border-primary overflow-hidden">
+            <input
+              type="text"
+              placeholder={`Search by ${activeTab === "authors" ? "Author Name" : "Book Title"}...`}
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              className="px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary w-64"
+            />
+            <button
+              className="h-full px-4 py-2 text-sm font-semibold bg-primary text-black hover:bg-primary/90 transition-colors"
+              onClick={() => {
+                setOffset(0);
+                setSearchApplied(searchText);
+              }}
+            >
+              Apply
+            </button>
+            <button
+              className="ml-2 h-full px-4 py-2 text-sm font-semibold bg-gray-100 hover:bg-gray-200 transition-colors text-gray-700 rounded-md"
+              onClick={() => {
+                setSearchText("");
+                setSearchApplied("");
+                setOffset(0);
+              }}
+            >
+              Clear
+            </button>
+          </div>
+        </div>
         <button className="btn btn-xs btn-primary px-4 py-3 shadow-sm hover:shadow-md border rounded-md gap-2" onClick={() => setShowAddModal(true)}>
           <FaPlus />
         </button>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto rounded-lg">
         <table className="w-full table-fixed border-separate border-spacing-y-2 border-base-200 text-sm">
           <thead>
@@ -150,7 +180,6 @@ export default function LibraryTabView() {
         </table>
       </div>
 
-      {/* Pagination */}
       <div className="mt-6">
         <Pagination
           limit={limit}
@@ -188,7 +217,6 @@ export default function LibraryTabView() {
           onRefresh={triggerRefresh}
         />
       )}
-
 
     </div>
   );
