@@ -9,6 +9,13 @@ export const GET_AUTHORS = gql`
                 name
                 biography
                 bornDate
+                books {
+                    id
+                    title
+                    description
+                    published_date
+                    author_id
+                }
             }
         }
     }
@@ -26,6 +33,8 @@ export const GET_BOOKS = gql`
                 author_id
                 author {
                     name
+                    biography
+                    bornDate
                 }
             }
         }

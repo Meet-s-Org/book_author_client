@@ -14,33 +14,27 @@ type Props = {
 export default function AddModal({ type, open, onClose, onRefresh }: Props) {
   const [formData, setFormData] = useState<any>({});
 
-  const {
-    data: authorsData,
-    refetch: refetchAuthors,
-    loading: loadingAuthors,
-  } = useQuery(GET_AUTHORS, {
+  const { data: authorsData, refetch: refetchAuthors, loading: loadingAuthors } = useQuery(GET_AUTHORS, {
     skip: type !== "book" || !open,
   });
 
   useEffect(() => {
     if (open && type === "book") {
-      refetchAuthors(); // force fetch when modal opens
+      refetchAuthors();
     }
   }, [open, type, refetchAuthors]);
-
 
   const [createAuthor] = useMutation(ADD_AUTHOR);
   const [createBook] = useMutation(ADD_BOOK);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleCreate = async () => {
     try {
-
       if (type === "author") {
         await createAuthor({
           variables: {
@@ -58,7 +52,9 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
               title: formData.title,
               description: formData.description,
               published_date: formData.published_date,
-              author_id: authorsData?.getAuthors?.data?.find((record: any) => record.name === formData.author)?.id,
+              author_id: authorsData?.getAuthors?.data?.find(
+                (record: any) => record.name === formData.author
+              )?.id,
             },
           },
         });
@@ -74,9 +70,12 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-xl p-8 w-full max-w-lg shadow-xl">
-        <h2 className="text-2xl font-semibold mb-6 text-primary">Add New {type}</h2>
+    <div className="modal modal-open">
+      <div className="modal-box w-full max-w-lg">
+        <h3 className="font-bold text-xl mb-4 text-primary">
+          Add New {type === "author" ? "Author" : "Book"}
+        </h3>
+
         <form className="space-y-4">
           {(type === "author"
             ? ["name", "biography", "bornDate"]
@@ -85,19 +84,22 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
             const isDateField = key.toLowerCase().includes("date");
 
             return (
-              <div key={key} className="form-control w-full mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-1 capitalize">
-                  {key.replace(/_/g, " ")}
+              <div key={key}>
+                <label className="label">
+                  <span className="label-text capitalize font-medium">
+                    {key.replace(/_/g, " ")}
+                  </span>
                 </label>
+
                 {key === "author" ? (
                   <select
                     name="author"
                     value={formData.author || ""}
                     onChange={handleChange}
                     disabled={loadingAuthors}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="select select-bordered w-full"
                   >
-                    <option value="" disabled>
+                    <option disabled value="">
                       {loadingAuthors ? "Loading authors..." : "Select author"}
                     </option>
                     {authorsData?.getAuthors?.data?.map((author: any) => (
@@ -112,7 +114,8 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
                     name={key}
                     value={formData[key] || ""}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="input input-bordered w-full"
+                    placeholder={`Enter ${key.replace(/_/g, " ")}`}
                   />
                 )}
               </div>
@@ -120,7 +123,7 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
           })}
         </form>
 
-        <div className="mt-6 flex justify-end gap-3">
+        <div className="modal-action mt-6">
           <button className="btn" onClick={onClose}>
             Cancel
           </button>
@@ -129,6 +132,7 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
           </button>
         </div>
       </div>
+      <div className="modal-backdrop" onClick={onClose}></div>
     </div>
   );
 }

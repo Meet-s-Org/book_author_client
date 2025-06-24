@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_AUTHORS, GET_BOOKS } from "@/graphql/queries";
@@ -8,10 +8,12 @@ import Pagination from "./Pagination";
 import EditModal from "./EditModal";
 import DeleteConfirm from "./DeleteConfirm";
 import AddModal from "./AddModal";
+import LibraryCard from "./LibraryCard";
+
 
 export default function LibraryTabView() {
   const [activeTab, setActiveTab] = useState<"authors" | "books">("authors");
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(0);
   const [refreshCounter, setRefreshCounter] = useState(0);
   const [searchText, setSearchText] = useState("");
@@ -51,7 +53,7 @@ export default function LibraryTabView() {
     activeTab === "authors"
       ? authorsData?.getAuthors.totalCount || 0
       : booksData?.getBooks?.totalCount || 0;
- 
+
   useEffect(() => {
     if (activeTab === "authors") {
       refetchAuthors();
@@ -67,126 +69,93 @@ export default function LibraryTabView() {
   const modalType = activeTab.slice(0, -1) as "author" | "book";
 
   return (
-    <div className="card shadow-xl bg-base-100 p-6 rounded-xl max-w-full">
-      {/* Tab Switcher */}
-      <div className="flex space-x-2 bg-base-100 rounded-lg w-max p-1 mb-6">
-        {["authors", "books"].map((tab) => {
-          const isActive = activeTab === tab;
-          return (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab as "authors" | "books")}
-              className={`px-6 py-2 text-sm font-semibold rounded-md transition-all duration-300 ${
-                isActive
-                  ? "bg-primary text-gray-600 shadow border border-primary"
-                  : "text-gray-500 hover:bg-base-200"
-              }`}
-            >
-              {tab === "authors" ? "👤 Authors" : "📖 Books"}
-            </button>
-          );
-        })}
+   <div className="bg-gradient-to-br from-base-100 to-base-200 shadow-2xl rounded-2xl border border-base-300 p-8 sm:p-10 max-w-full transition-all duration-300">
+      
+      <div className="tabs tabs-boxed justify-center mb-6">
+        {["authors", "books"].map((tab) => (
+          <a
+            key={tab}
+            className={`tab ${activeTab === tab ? "tab-active text-primary font-bold" : ""}`}
+            onClick={() => setActiveTab(tab as "authors" | "books")}
+          >
+            {tab === "authors" ? "👤 Authors" : "📖 Books"}
+          </a>
+        ))}
       </div>
 
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-primary">
-          {activeTab === "authors" ? "Author List" : "Book List"}
-        </h2>
-        <div className="flex justify-center">
-          <div className="flex items-center rounded-lg shadow-sm border border-primary overflow-hidden">
-            <input
-              type="text"
-              placeholder={`Search by ${activeTab === "authors" ? "Author Name" : "Book Title"}...`}
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              className="px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary w-64"
-            />
-            <button
-              className="h-full px-4 py-2 text-sm font-semibold bg-primary text-black hover:bg-primary/90 transition-colors"
-              onClick={() => {
-                setOffset(0);
-                setSearchApplied(searchText);
-              }}
-            >
-              Apply
-            </button>
-            <button
-              className="ml-2 h-full px-4 py-2 text-sm font-semibold bg-gray-100 hover:bg-gray-200 transition-colors text-gray-700 rounded-md"
-              onClick={() => {
-                setSearchText("");
-                setSearchApplied("");
-                setOffset(0);
-              }}
-            >
-              Clear
-            </button>
-          </div>
+      <div className="grid grid-cols-3 md:grid-cols-[auto_1fr_auto] items-center gap-4 mb-6 px-6">
+      <h2 className="text-lg md:text-xl font-semibold text-primary whitespace-nowrap">
+        {activeTab === "authors" ? "Author List" : "Book List"}
+      </h2>
+
+      <div className="w-full">
+        <div className="join w-full max-w-xl ml-auto">
+          <input
+            type="text"
+            placeholder={`Search by ${activeTab === "authors" ? "Author Name" : "Book Title"}`}
+            className="input input-sm input-bordered join-item w-full"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <button
+            className="btn btn-sm btn-primary join-item"
+            onClick={() => {
+              setOffset(0);
+              setSearchApplied(searchText);
+            }}
+          >
+            Search
+          </button>
+          <button
+            className="btn btn-sm join-item"
+            onClick={() => {
+              setSearchText("");
+              setSearchApplied("");
+              setOffset(0);
+            }}
+          >
+            Clear
+          </button>
         </div>
-        <button className="btn btn-xs btn-primary px-4 py-3 shadow-sm hover:shadow-md border rounded-md gap-2" onClick={() => setShowAddModal(true)}>
+      </div>
+
+      <div className="justify-self-end">
+        <button
+          className="btn btn-sm btn-success gap-2 shadow-md whitespace-nowrap"
+          onClick={() => setShowAddModal(true)}
+        >
           <FaPlus />
+          Add {modalType === "author" ? "Author" : "Book"}
         </button>
       </div>
+    </div>
 
-      <div className="overflow-x-auto rounded-lg">
-        <table className="w-full table-fixed border-separate border-spacing-y-2 border-base-200 text-sm">
-          <thead>
-            <tr className="bg-base-200 text-base-content">
-              {(activeTab === "authors"
-                ? ["Name", "Bio", "Born"]
-                : ["Title", "Description", "Published", "Author"]
-              ).map((col) => (
-                <th key={col} className="text-left px-4 py-3 font-semibold">
-                  {col}
-                </th>
-              ))}
-              <th className="text-right px-4 py-3 font-semibold">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(loadingAuthors || loadingBooks) && (
-              <tr>
-                <td colSpan={activeTab === "authors" ? 4 : 5} className="px-4 py-6 text-center">
-                  Loading...
-                </td>
-              </tr>
-            )}
-            {currentData.map((row: any) => (
-              <tr key={row.id} className="shadow-sm hover:shadow-md transition-shadow rounded-md">
-                {(activeTab === "authors"
-                  ? [row.name, row.biography, row.bornDate]
-                  : [row.title, row.description, row.published_date, row.author?.name]
-                ).map((cell, i) => (
-                  <td key={i} className="px-4 py-3 align-top rounded-md">{cell}</td>
-                ))}
-                <td className="px-4 py-3 rounded-md text-right">
-                  <div className="flex justify-end gap-2">
-                    <button
-                      className="btn btn-xs btn-outline btn-success"
-                      onClick={() => setEditRecord(row)}
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      className="btn btn-xs btn-outline btn-error"
-                      onClick={() => setDeleteRecordId(row.id)}
-                    >
-                      ❌
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="grid grid-cols-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-6 py-10">
+        {(loadingAuthors || loadingBooks) && (
+          <div className="col-span-full text-center py-10 text-lg">Loading...</div>
+        )}
+
+        {currentData.map((item: any) => (
+          <LibraryCard
+            key={item.id}
+            item={item}
+            type={modalType}
+            onEdit={setEditRecord}
+            onDelete={setDeleteRecordId}
+          />
+        ))}
       </div>
 
-      <div className="mt-6">
-        <Pagination
-          limit={limit}
-          offset={offset}
-          totalCount={totalCount}
-          onPageChange={(newOffset) => setOffset(newOffset)}
-        />
+
+      <div className="mt-16 px-6">
+        <div className="card bg-base-100 shadow-md rounded-xl p-6">
+          <Pagination
+            limit={limit}
+            offset={offset}
+            totalCount={totalCount}
+            onPageChange={(newOffset) => setOffset(newOffset)}
+          />
+        </div>
       </div>
 
       {editRecord && (
