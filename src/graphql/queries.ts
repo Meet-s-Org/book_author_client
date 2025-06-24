@@ -14,7 +14,6 @@ export const GET_AUTHORS = gql`
     }
 `;
 
-
 export const GET_BOOKS = gql`
     query GET_BOOKS($limit: Int, $offset: Int, $searchByTitle: String) {
         getBooks(limit: $limit, offset: $offset, searchByTitle: $searchByTitle) {

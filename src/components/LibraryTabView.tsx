@@ -180,7 +180,6 @@ export default function LibraryTabView() {
         </table>
       </div>
 
-      {/* Pagination */}
       <div className="mt-6">
         <Pagination
           limit={limit}
@@ -218,7 +217,6 @@ export default function LibraryTabView() {
           onRefresh={triggerRefresh}
         />
       )}
-
 
     </div>
   );
