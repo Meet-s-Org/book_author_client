@@ -68,13 +68,13 @@ export default function EditModal({ record, type, open, onClose, onRefresh }: Pr
 
         <form className="space-y-4">
           {Object.entries(formData).map(([key, value]) => {
-            if (["id", "__typename", "author_id", "author"].includes(key)) return null;
+            if (["id", "__typename", "author_id", "author", "books"].includes(key)) return null;
 
             const isDate = key.toLowerCase().includes("date");
 
             return (
               <div key={key}>
-                <label className="label">
+                <label className="label w-full">
                   <span className="label-text font-medium capitalize">{key.replace(/_/g, " ")}</span>
                 </label>
                 <input
@@ -82,7 +82,7 @@ export default function EditModal({ record, type, open, onClose, onRefresh }: Pr
                   name={key}
                   value={isDate ? String(value).slice(0, 10) : String(value ?? "")}
                   onChange={handleChange}
-                  className="input input-bordered w-full"
+                  className="input input-bordered"
                 />
               </div>
             );
