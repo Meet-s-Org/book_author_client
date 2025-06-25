@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_AUTHORS, GET_BOOKS } from "@/graphql/queries";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaSearch } from "react-icons/fa";
 import Pagination from "./Pagination";
 import EditModal from "./EditModal";
 import DeleteConfirm from "./DeleteConfirm";
 import AddModal from "./AddModal";
 import LibraryCard from "./LibraryCard";
-import { MdMargin } from "react-icons/md";
-
 
 export default function LibraryTabView() {
   const [activeTab, setActiveTab] = useState<"authors" | "books">("authors");
@@ -90,23 +88,23 @@ export default function LibraryTabView() {
         </h2>
 
         <div className="w-full">
-          <div className="flex gap-2 items-center w-full max-w-xl mx-auto">
+          <div className="flex gap-2 items-center w-full max-w-md mx-auto">
             <input
               type="text"
               placeholder={`Search by ${activeTab === "authors" ? "Author Name" : "Book Title"}`}
-              className="input input-sm input-bordered flex-grow"
+              className="input input-xs flex-grow"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
 
             <button
-              className="btn btn-sm btn-primary btn-outline"
+              className="btn btn-sm btn-ghost"
               onClick={() => {
                 setOffset(0);
                 setSearchApplied(searchText);
               }}
             >
-              Search
+              <FaSearch/>
             </button>
             <button
               className="btn btn-sm btn-outline"

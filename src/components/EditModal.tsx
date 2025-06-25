@@ -64,29 +64,46 @@ export default function EditModal({ record, type, open, onClose, onRefresh }: Pr
   return (
     <div className="modal modal-open">
       <div className="modal-box w-full max-w-xl">
-        <h3 className="text-xl font-semibold text-primary mb-4">Edit {type}</h3>
+        <h4 className="text-xl font-semibold text-primary mb-4">Edit {type}</h4>
 
         <form className="space-y-4">
+
+          <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-md border p-8">
+            <legend className="fieldset-legend capitalize p-8">{type === "author" ? 'Author Details..' : 'Book Details..'}</legend>
+
           {Object.entries(formData).map(([key, value]) => {
             if (["id", "__typename", "author_id", "author", "books"].includes(key)) return null;
 
             const isDate = key.toLowerCase().includes("date");
+            const isAreaField = key.toLowerCase().includes("biography") || key.toLowerCase().includes("description");
 
             return (
               <div key={key}>
-                <label className="label w-full">
-                  <span className="label-text font-medium capitalize">{key.replace(/_/g, " ")}</span>
-                </label>
-                <input
-                  type={isDate ? "date" : "text"}
-                  name={key}
-                  value={isDate ? String(value).slice(0, 10) : String(value ?? "")}
-                  onChange={handleChange}
-                  className="input input-bordered"
-                />
+                <label className="label w-full capitalize"><span>{key.replace(/_/g, " ")}</span></label>
+                {isAreaField ?
+                    <textarea
+                      name={key}
+                      className="textarea textarea-sm textarea-ghost"
+                      placeholder={`Enter ${key.replace(/_/g, " ")}`}
+                      onChange={handleChange}
+                      value={formData[key] || ""}
+                    />
+                    :
+                    <input
+                      type={isDate ? "date" : "text"}
+                      name={key}
+                      className="input input-sm input-ghost"
+                      placeholder={`Enter ${key.replace(/_/g, " ")}`}
+                      onChange={handleChange}
+                      value={isDate ? String(value).slice(0, 10) : String(value ?? "")}
+                    />
+                  }
+
               </div>
             );
           })}
+
+          </fieldset>
         </form>
 
         <div className="modal-action mt-6">
