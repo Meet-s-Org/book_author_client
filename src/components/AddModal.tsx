@@ -94,8 +94,8 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
 
                   {key === "author" ? (
                     
-                    <select className="select select-ghost select-sm" value={formData.author || ""}>
-                      <option disabled value="">{loadingAuthors ? "Loading authors..." : "Select Author"}</option>
+                    <select className="select select-ghost select-sm" name="author" value={formData.author || ""} onChange={handleChange} disabled={loadingAuthors}>
+                      <option disabled={true} value="">{loadingAuthors ? "Loading authors..." : "Select Author"}</option>
                       {authorsData?.getAuthors?.data?.map((author: any) => (
                         <option key={author.id} value={author.name}>
                           {author.name}
