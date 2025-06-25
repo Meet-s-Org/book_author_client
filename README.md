@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Live server - https://book-author-client.onrender.com
+Live server - https://book-author-client.vercel.app/ or https://book-author-client.onrender.com
 
 ## Getting Started
 
