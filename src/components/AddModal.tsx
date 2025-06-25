@@ -72,55 +72,60 @@ export default function AddModal({ type, open, onClose, onRefresh }: Props) {
   return (
     <div className="modal modal-open">
       <div className="modal-box w-full max-w-lg">
-        <h3 className="font-bold text-xl mb-4 text-primary">
+        <h4 className="font-bold text-xl mb-4 text-primary">
           Add New {type === "author" ? "Author" : "Book"}
-        </h3>
+        </h4>
 
         <form className="space-y-4">
-          {(type === "author"
-            ? ["name", "biography", "bornDate"]
-            : ["title", "description", "published_date", "author"]
-          ).map((key) => {
-            const isDateField = key.toLowerCase().includes("date");
 
-            return (
-              <div key={key}>
-                <label className="label w-full">
-                  <span className="label-text capitalize font-medium">
-                    {key.replace(/_/g, " ")}
-                  </span>
-                </label>
+          <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-md border p-8">
+              <legend className="fieldset-legend capitalize p-8">{type === "author" ? 'Author Details..' : 'Book Details..'}</legend>
 
-                {key === "author" ? (
-                  <select
-                    name="author"
-                    value={formData.author || ""}
-                    onChange={handleChange}
-                    disabled={loadingAuthors}
-                    className="select select-bordered"
-                  >
-                    <option disabled value="">
-                      {loadingAuthors ? "Loading authors..." : "Select author"}
-                    </option>
-                    {authorsData?.getAuthors?.data?.map((author: any) => (
-                      <option key={author.id} value={author.name}>
-                        {author.name}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    type={isDateField ? "date" : "text"}
-                    name={key}
-                    value={formData[key] || ""}
-                    onChange={handleChange}
-                    className="input input-bordered"
-                    placeholder={`Enter ${key.replace(/_/g, " ")}`}
-                  />
-                )}
-              </div>
-            );
-          })}
+            {(type === "author"
+              ? ["name", "biography", "bornDate"]
+              : ["title", "description", "published_date", "author"]
+            ).map((key) => {
+              const isDateField = key.toLowerCase().includes("date");
+              const isAreaField = key.toLowerCase().includes("biography") || key.toLowerCase().includes("description");
+
+              return (
+                <div key={key}>
+                  <label className="label w-full capitalize"><span>{key.replace(/_/g, " ")}</span></label>
+
+                  {key === "author" ? (
+                    
+                    <select className="select select-ghost select-sm" value={formData.author || ""}>
+                      <option disabled value="">{loadingAuthors ? "Loading authors..." : "Select Author"}</option>
+                      {authorsData?.getAuthors?.data?.map((author: any) => (
+                        <option key={author.id} value={author.name}>
+                          {author.name}
+                        </option>
+                      ))}
+                    </select>
+
+                  ) : (
+                    isAreaField ?
+                      <textarea
+                        name={key}
+                        className="textarea textarea-sm textarea-ghost"
+                        placeholder={`Enter ${key.replace(/_/g, " ")}`}
+                        onChange={handleChange}
+                        value={formData[key] || ""}
+                      />
+                      :
+                      <input
+                        type={isDateField ? "date" : "text"}
+                        name={key}
+                        className="input input-sm input-ghost"
+                        placeholder={`Enter ${key.replace(/_/g, " ")}`}
+                        onChange={handleChange}
+                        value={formData[key] || ""}
+                      />
+                  )}
+                </div>
+              );
+            })}
+          </fieldset>
         </form>
 
         <div className="modal-action mt-6">
