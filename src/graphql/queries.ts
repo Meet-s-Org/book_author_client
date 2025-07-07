@@ -1,24 +1,35 @@
 import { gql } from "@apollo/client";
 
+const all_fragments = gql`
+    fragment authorFields on Author {
+        id
+        name
+        biography
+        bornDate
+    }
+
+    fragment bookFields on Book {
+        id
+        title
+        description
+        published_date
+        author_id
+    }
+`;
+
 export const GET_AUTHORS = gql`
     query GET_AUTHORS($limit: Int, $offset: Int, $searchByName: String) {
         getAuthors(limit: $limit, offset: $offset, searchByName: $searchByName) {
             totalCount
             data {
-                id
-                name
-                biography
-                bornDate
+                ...authorFields
                 books {
-                    id
-                    title
-                    description
-                    published_date
-                    author_id
+                    ...bookFields
                 }
             }
         }
     }
+    ${all_fragments}
 `;
 
 export const GET_BOOKS = gql`
@@ -26,17 +37,12 @@ export const GET_BOOKS = gql`
         getBooks(limit: $limit, offset: $offset, searchByTitle: $searchByTitle) {
             totalCount
             data {
-                id
-                title
-                description
-                published_date
-                author_id
+                ...bookFields
                 author {
-                    name
-                    biography
-                    bornDate
+                    ...authorFields
                 }
             }
         }
     }
+    ${all_fragments}
 `;
